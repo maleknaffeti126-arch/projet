@@ -1,0 +1,62 @@
+
+<header class="topbar">
+  <a class="brand" routerLink="/">
+    <span class="brand-mark">✿</span>
+    <span>
+      Les Deux Petites <b>Gourmandes</b>
+      <small>DOUCEURS FAITES AVEC AMOUR</small>
+    </span>
+  </a>
+
+  <nav>
+    <a routerLink="/" routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact:true}">Accueil</a>
+    <a routerLink="/boutique" routerLinkActive="active">La boutique</a>
+    <a routerLink="/personnalisation" routerLinkActive="active">Sur mesure</a>
+    <a routerLink="/box" routerLinkActive="active">Box gourmande</a>
+  </nav>
+
+  <div class="nav-actions">
+    <a class="admin-link" routerLink="/admin">Admin</a>
+    <a class="cart-link" routerLink="/panier">
+      ♡ Panier <span>{{ boutique.nombreArticles() }}</span>
+    </a>
+  </div>
+
+  <button class="mobile-menu" (click)="menuOuvert = !menuOuvert">☰</button>
+</header>
+
+@if (menuOuvert) {
+  <nav class="mobile-nav">
+    <a routerLink="/boutique" (click)="menuOuvert=false">La boutique</a>
+    <a routerLink="/personnalisation" (click)="menuOuvert=false">Sur mesure</a>
+    <a routerLink="/box" (click)="menuOuvert=false">Box gourmande</a>
+    <a routerLink="/admin" (click)="menuOuvert=false">Administration</a>
+  </nav>
+}
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer>
+  <div>
+    <a class="brand footer-brand" routerLink="/">
+      ✿ Les Deux Petites Gourmandes
+    </a>
+    <p>Des petites douceurs, beaucoup de bonheur.</p>
+  </div>
+
+  <div>
+    <b>Navigation</b>
+    <a routerLink="/boutique">La boutique</a>
+    <a routerLink="/box">Box gourmande</a>
+    <a routerLink="/admin">Espace admin</a>
+  </div>
+
+  <div>
+    <b>Contact</b>
+    <p>Fait maison avec amour ♡</p>
+    <p>© 2026 Les Deux Petites Gourmandes</p>
+  </div>
+</footer>

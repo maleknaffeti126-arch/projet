@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section class="page-heading admin-heading">
+  <span class="eyebrow">ESPACE PRIVÉ · GESTION DE LA BOUTIQUE</span>
+  <h1>Tableau de <em>bord</em></h1>
+  <p>Gérez vos douceurs, vos quantités et vos commandes.</p>
+</section>
+
+<section class="admin section">
+
+@if (!connecte()) {
+  <div class="login-card">
+    <span class="eyebrow">ACCÈS ADMINISTRATEUR</span>
+    <h2>Bienvenue !</h2>
+    <p>Connectez-vous pour gérer votre boutique.</p>
+
+    <label>Email</label>
+    <input
+      type="email"
+      placeholder="admin@douceurs.tn"
+      [ngModel]="email()"
+      (ngModelChange)="email.set($event)"
+    >
+
+    <label>Mot de passe</label>
+    <input
+      type="password"
+      placeholder="Mot de passe"
+      [ngModel]="motDePasse()"
+      (ngModelChange)="motDePasse.set($event)"
+    >
+
+    <button class="btn btn-dark full" (click)="connexion()">
+      Se connecter
+    </button>
+
+    <small>Démo : admin@douceurs.tn / gourmandes2026</small>
+  </div>
+}
+@else {
+
+  <div class="admin-top">
+    <div>
+      <span class="eyebrow">VUE D'ENSEMBLE</span>
+      <h2>Bonjour, administrateur ♡</h2>
+    </div>
+
+    <button class="btn btn-outline" (click)="deconnexion()">
+      Déconnexion
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span>Produits au catalogue</span>
+      <b>{{ boutique.produits().length }}</b>
+      <small>Références</small>
+    </div>
+
+    <div class="stat-card">
+      <span>Unités en stock</span>
+      <b>{{ stockTotal() }}</b>
+      <small>Toutes catégories</small>
+    </div>
+
+    <div class="stat-card">
+      <span>Produits disponibles</span>
+      <b>{{ disponibles() }}</b>
+      <small>Prêts à commander</small>
+    </div>
+
+    <div class="stat-card warning">
+      <span>Stock faible</span>
+      <b>{{ stockFaible() }}</b>
+      <small>5 unités ou moins</small>
+    </div>
+  </div>
+
+  <div class="admin-section-title">
+    <div>
+      <span class="eyebrow">CATALOGUE</span>
+      <h2>Gestion des produits</h2>
+    </div>
+
+    <button class="btn btn-dark" (click)="nouveau()">
+      + Ajouter un produit
+    </button>
+  </div>
+
+  @if (formulaire()) {
+    <div class="edit-form">
+      <h3>{{ editionId() ? 'Modifier le produit' : 'Nouveau produit' }}</h3>
+
+      <div class="edit-grid">
+
+        <label>
+          Nom
+          <input
+            [ngModel]="nom()"
+            (ngModelChange)="nom.set($event)"
+          >
+        </label>
+
+        <label>
+          Catégorie
+          <select
+            [ngModel]="categorie()"
+            (ngModelChange)="categorie.set($event)"
+          >
+            <option>Cookies</option>
+            <option>Brownies</option>
+            <option>Crêpes</option>
+          </select>
+        </label>
+
+        <label>
+          Prix (DT)
+          <input
+            type="number"
+            min="0"
+            [ngModel]="prix()"
+            (ngModelChange)="prix.set(+$event)"
+          >
+        </label>
+
+        <label>
+          Quantité en stock
+          <input
+            type="number"
+            min="0"
+            [ngModel]="quantite()"
+            (ngModelChange)="quantite.set(+$event)"
+          >
+        </label>
+
+        <label class="wide">
+          URL de la photo
+          <input
+            [ngModel]="photo()"
+            (ngModelChange)="photo.set($event)"
+          >
+        </label>
+
+        <label class="wide">
+          Description
+          <textarea
+            rows="2"
+            [ngModel]="description()"
+            (ngModelChange)="description.set($event)"
+          ></textarea>
+        </label>
+
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-dark" (click)="enregistrer()">
+          Enregistrer
+        </button>
+
+        <button class="btn btn-outline" (click)="annuler()">
+          Annuler
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Catégorie</th>
+          <th>Prix</th>
+          <th>Stock</th>
+          <th>État</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (p of boutique.produits(); track p.id) {
+          <tr>
+            <td>
+              <div class="table-product">
+                <img [src]="p.photo" [alt]="p.nom">
+                <b>{{ p.nom }}</b>
+              </div>
+            </td>
+
+            <td>{{ p.categorie }}</td>
+            <td>{{ p.prix.toFixed(2) }} DT</td>
+            <td>{{ p.quantiteRestante }}</td>
+
+            <td>
+              <span class="status" [class.low]="p.quantiteRestante <= 5">
+                {{ p.quantiteRestante > 0 ? 'Disponible' : 'Épuisé' }}
+              </span>
+            </td>
+
+            <td>
+              <button class="table-action" (click)="modifier(p)">
+                Modifier
+              </button>
+
+              <button class="table-action danger" (click)="supprimer(p.id)">
+                Supprimer
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-section-title orders-title">
+    <div>
+      <span class="eyebrow">MATIÈRES PREMIÈRES</span>
+      <h2>Suivi des ingrédients</h2>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ingrédient</th>
+          <th>Allergène</th>
+          <th>Quantité restante (démo)</th>
+          <th>État</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (i of boutique.ingredients; track i.nom) {
+          <tr>
+            <td><b>{{ i.nom }}</b></td>
+            <td>{{ i.allergene ? 'Oui' : 'Non' }}</td>
+            <td>{{ i.quantiteRestante }}</td>
+
+            <td>
+              <span class="status" [class.low]="i.quantiteRestante <= 250">
+                {{ i.quantiteRestante <= 250 ? 'À renouveler' : 'Stock correct' }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-section-title orders-title">
+    <div>
+      <span class="eyebrow">SUIVI</span>
+      <h2>Commandes enregistrées</h2>
+    </div>
+  </div>
+
+  <div class="orders-list">
+    @for (c of commandes(); track $index) {
+      <div class="order-row">
+        <div>
+          <b>{{ c.nom }}</b>
+          <span>{{ c.date }} · {{ c.telephone }}</span>
+        </div>
+
+        <b>{{ c.total.toFixed(2) }} DT</b>
+      </div>
+    }
+    @empty {
+      <p class="empty">
+        Aucune commande enregistrée pour le moment.
+      </p>
+    }
+  </div>
+
+}
+
+</section>
+</body>
+</html>

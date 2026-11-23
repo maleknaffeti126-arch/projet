@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section class="page-heading">
+        <span class="eyebrow">VOS ENVIES SONT PRESQUE LÀ</span>
+        <h1>Mon <em>panier</em></h1>
+        <p>Vérifiez votre sélection avant de confirmer.</p>
+    </section>
+    <section class="cart-layout section">
+        <div class="cart-list">@if(boutique.panier().length===0){
+            <div class="empty-cart"><span>♡</span>
+                <h2>Votre panier est tout doux… mais vide !</h2>
+                <p>Ajoutez quelques gourmandises pour commencer.</p>
+                <a class="btn btn-dark" routerLink="/boutique">Découvrir la boutique</a>
+            </div>
+            }@else{
+                @for(l of boutique.panier();track l.produit.id){
+                    <article class="cart-item">
+                        <img [src]="l.produit.photo" [alt]="l.produit.nom">
+                        <div class="cart-product">
+                            <h3>{{l.produit.nom}}</h3>
+                            <span>{{l.produit.prix.toFixed(2)}} DT / pièce</span>
+                            <button class="remove" (click)="boutique.supprimerDuPanier(l.produit.id)">Supprimer</button>
+                        </div>
+                        <div class="quantity">
+                            <button (click)="boutique.modifierQuantite(l.produit.id,l.quantite-1)">−</button>
+                            <b>{{l.quantite}}</b>
+                            <button (click)="boutique.modifierQuantite(l.produit.id,l.quantite+1)">+</button>
+                        </div>
+                        <b class="line-price">{{(l.produit.prix*l.quantite).toFixed(2)}} DT</b>
+                    </article>
+                    }}
+        </div>
+        <aside class="cart-summary">
+            <span class="eyebrow">RÉCAPITULATIF</span>
+            <h2>Votre commande</h2>
+            <div class="total-line">
+                <span>Articles ({{boutique.nombreArticles()}})</span>
+                <b>{{boutique.total().toFixed(2)}} DT</b>
+            </div>
+            <div class="total-line">
+                <span>Livraison</span>
+                <span>À confirmer</span></div>
+                <div class="total-line grand-total">
+                    <span>Total</span><b>{{boutique.total().toFixed(2)}} DT</b>
+                </div>
+                <label for="client">Votre nom</label>
+                <input id="client" placeholder="Nom et prénom" [ngModel]="nom()" (ngModelChange)="nom.set($event)">
+                <label for="telephone">Téléphone</label>
+                <input id="telephone" placeholder="Votre numéro" [ngModel]="telephone()" (ngModelChange)="telephone.set($event)">
+                <label for="adresse">Adresse / remarque</label>
+                <textarea id="adresse" rows="3" placeholder="Adresse de livraison ou remarque" [ngModel]="adresse()" (ngModelChange)="adresse.set($event)"></textarea>
+                <button class="btn btn-dark full" [disabled]="boutique.panier().length===0" (click)="commander()">Confirmer la commande ♡</button>
+                <small class="hint">Démo pédagogique : la commande est confirmée localement, aucun paiement réel n'est effectué.</small>
+        </aside>
+    </section>
+</body>
+</html>

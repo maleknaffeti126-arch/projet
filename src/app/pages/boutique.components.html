@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section class="page-heading"><span class="eyebrow">LE BONHEUR EST DANS L'ASSIETTE</span><h1>Notre <em>boutique</em></h1><p>Des créations gourmandes pour toutes vos envies.</p></section>
+    <section class="shop section">
+        <div class="shop-tools">
+            <input type="search" placeholder="Rechercher une douceur…" [ngModel]="recherche()" (ngModelChange)="recherche.set($event)">
+            <div class="filter-pills">
+                <button [class.selected]="categorie()==='Tout'" (click)="categorie.set('Tout')">Tout</button>#
+                @for(cat of categories;track cat){<button [class.selected]="categorie()===cat" (click)="categorie.set(cat)">{{cat}}</button>}</div></div>
+    <div class="product-grid">@for(p of produitsFiltres();track p.id){
+        <article class="product-card">
+            <div class="product-photo">
+                <img [src]="p.photo" [alt]="p.nom">
+                <span class="product-tag">{{p.categorie}}</span>
+                @if(!p.disponible || p.quantiteRestante===0){
+                    <span class="sold-out">Épuisé</span>}</div>
+                    <div class="product-info"><div>
+                        <h3>{{p.nom}}</h3><p>{{p.description}}</p>
+                        <small class="ingredients">Ingrédients : {{ingredientsTexte(p)}}</small>
+                        <small class="allergenes">{{contientAllergenes(p) ? '⚠ Contient des allergènes (voir ingrédients)' : 'Sans allergène signalé'}}</small></div>
+                        <div class="product-bottom"><b>{{p.prix.toFixed(2)}} DT</b>
+                            <span class="stock">{{p.quantiteRestante}} disponible(s)</span>
+                        </div><button class="btn btn-dark full" [disabled]="!p.disponible || p.quantiteRestante===0" (click)="ajouter(p.id)">Ajouter au panier +</button>
+                    </div></article>
+                }@empty{<p class="empty">Aucune douceur ne correspond à votre recherche.</p>}
+            </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,69 @@
+
+<section class="page-heading">
+    <span class="eyebrow">LE PLAISIR DE TOUT GOÛTER</span>
+    <h1>Ma box <em>gourmande</em></h1>
+    <p>Composez votre boîte avec vos pâtisseries préférées.</p>
+</section>
+
+<section class="box-layout section">
+    <div>
+        <div class="box-intro">
+            <span class="eyebrow">ÉTAPE 01</span>
+            <h2>Choisissez vos petites douceurs</h2>
+            <p>Ajoutez les quantités que vous souhaitez dans votre box.</p>
+        </div>
+
+        <div class="box-products">
+            @for (p of boutique.produits(); track p.id) {
+                <article class="box-product">
+                    <img [src]="p.photo" [alt]="p.nom">
+
+                    <div>
+                        <b>{{ p.nom }}</b>
+                        <span>{{ p.prix.toFixed(2) }} DT · {{ p.quantiteRestante }} en stock</span>
+                    </div>
+
+                    <div class="quantity">
+                        <button
+                            (click)="retirer(p.id)"
+                            [disabled]="(selection()[p.id] || 0) === 0">
+                            −
+                        </button>
+
+                        <b>{{ selection()[p.id] || 0 }}</b>
+
+                        <button
+                            (click)="ajouter(p.id)"
+                            [disabled]="!p.disponible || (selection()[p.id] || 0) >= p.quantiteRestante">
+                            +
+                        </button>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+
+    <aside class="box-summary">
+        <span class="eyebrow">VOTRE COMPOSITION</span>
+
+        <div class="box-illustration">
+            ♡
+            <small>MA BOX</small>
+        </div>
+
+        <h2>{{ nombre() }} douceur(s)</h2>
+        <p>Une jolie sélection faite par vous.</p>
+
+        <div class="total-line">
+            <span>Total</span>
+            <b>{{ total().toFixed(2) }} DT</b>
+        </div>
+
+        <button
+            class="btn btn-dark full"
+            [disabled]="nombre() === 0"
+            (click)="valider()">
+            Ajouter la box au panier
+        </button>
+    </aside>
+</section>

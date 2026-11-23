@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section class="page-heading">
+        <span class="eyebrow">UNE ATTENTION QUI FAIT PLAISIR</span>
+        <h1>Une douceur à votre <em>image</em></h1>
+        <p>Composez une création unique pour votre occasion spéciale.</p>
+    </section>
+    <section class="custom-layout section">
+        <div class="custom-form"><div class="form-block">
+            <span class="step">01</span>
+            <div>
+                <h3>Choisissez votre douceur</h3>
+                <p>La base de votre création</p>
+            </div>
+        </div>
+        <div class="choice-grid">@for(p of bases;track p.id){
+            <button class="choice" [class.chosen]="base()===p.id" (click)="base.set(p.id)">
+                <img [src]="p.photo" [alt]="p.nom">
+                <b>{{p.nom}}</b>
+                <span>{{p.prix.toFixed(2)}} DT</span>
+            </button>}
+        </div>
+        <div class="form-block">
+            <span class="step">02</span>
+            <div>
+                <h3>La décoration</h3>
+                <p>Ajoutez votre touche personnelle</p>
+            </div>#
+        </div>
+        <label>Couleur de décoration</label>
+        <div class="color-options">
+            <button class="swatch pink" [class.chosen]="couleur()==='Rose'" (click)="couleur.set('Rose')" aria-label="Rose"></button>
+            <button class="swatch cream" [class.chosen]="couleur()==='Crème'" (click)="couleur.set('Crème')" aria-label="Crème"></button>
+            <button class="swatch brown" [class.chosen]="couleur()==='Chocolat'" (click)="couleur.set('Chocolat')" aria-label="Chocolat"></button>
+            <button class="swatch lilac" [class.chosen]="couleur()==='Lilas'" (click)="couleur.set('Lilas')" aria-label="Lilas"></button>
+        </div>
+        <label for="topping">Garniture supplémentaire</label>
+        <select id="topping" [ngModel]="topping()" (ngModelChange)="topping.set($event)">
+            <option value="Aucune">Aucune (+0 DT)</option>
+            <option value="Pépites de chocolat">Pépites de chocolat (+1.5 DT)</option>
+            <option value="Fraises">Fraises (+2 DT)</option>
+            <option value="Noisettes">Noisettes (+1.5 DT)</option>
+            <option value="Caramel">Caramel (+1 DT)</option>
+        </select>
+        <div class="form-block">
+            <span class="step">03</span>
+            <div><h3>Votre petit mot</h3>
+                <p>Un message qui vient du cœur</p>
+            </div>
+        </div>
+        <input class="message-input" maxlength="60" placeholder="Ex. Joyeux anniversaire !" [ngModel]="message()" (ngModelChange)="message.set($event)">
+        <small>{{message().length}} / 60 caractères</small>
+    </div>
+        <aside class="preview-card">
+            <span class="eyebrow">VOTRE CRÉATION</span>
+            <div class="preview-circle">
+                <img [src]="produit()?.photo" alt="Aperçu de la pâtisserie">
+                <span>✿</span>
+            </div>
+            <h2>{{produit()?.nom}}</h2>
+            <p>Décoration {{couleur().toLowerCase()}} · {{topping()}}</p>
+            <div class="preview-message">{{message() || 'Votre message apparaîtra ici ♡'}}</div>
+            <div class="total-line">
+                <span>Prix total</span>
+                <b>{{total().toFixed(2)}} DT</b>
+            </div>
+            <button class="btn btn-dark full" (click)="ajouter()">Ajouter ma création au panier</button>
+        </aside>
+    </section>
+</body>
+</html>
